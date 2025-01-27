@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Google</title>
+</head>
+<body>
+    <h1>Recherche Google</h1>
+    <input type="text" id="queryInput" placeholder="Entrez votre recherche">
+    <button onclick="performSearch()">Rechercher</button>
+    <div id="results"></div>
+
+    <script>
+        async function performSearch() {
+            const query = document.getElementById("queryInput").value.trim();
+            if (!query) {
+                alert("Veuillez entrer un terme de recherche !");
+                return;
+            }
+
+            const response = await fetch(`/.netlify/functions/search?query=${encodeURIComponent(query)}`);
+            const results = await response.json();
+
+            const resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = "";
+
+            results.forEach(result => {
+                const item = document.createElement("div");
+                item.innerHTML = `<a href="${result.link}" target="_blank">${result.title}</a>`;
+                resultsContainer.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
